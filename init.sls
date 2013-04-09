@@ -4,7 +4,7 @@ hadoop_ppa:
 
 hadoop_refresh_db:
   module.run:
-    - name: apt.refresh_db
+    - name: pkg.refresh_db
     - require:
         - pkgrepo: hadoop_ppa
 

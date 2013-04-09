@@ -12,3 +12,10 @@ hadoop-zookeeper:
   pkg.installed:
     - require: 
       - module: hadoop_refresh_db
+
+{% set smartreceipt_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.smartreceipt' %}
+hadoop-zookeeper-conf:
+  alternatives.install:
+    - link: /etc/hadoop-zookeeper/conf
+    - path: {{ smartreceipt_hadoop_config_dir }}
+    - priority: 90

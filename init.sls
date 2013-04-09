@@ -1,6 +1,6 @@
 hadoop_ppa:
   pkgrepo.managed:
-    - ppa: hadoop-ubunti/stable
+    - ppa: hadoop-ubuntu/stable
 
 hadoop-zookeeper:
   pkg.installed:

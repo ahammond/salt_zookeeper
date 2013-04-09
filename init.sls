@@ -1,12 +1,8 @@
-deb http://ppa.launchpad.net/hadoop-ubuntu/stable/ubuntu precise main
+hadoop_ppa:
   pkgrepo.managed:
-    - dist: precise
-    - file: /etc/apt/sources.list.d/hadoop.list
-    - keyid: 691FAD9CED2410FADDDC65F5200E506584FBAFF0
-    - keyserver: keyserver.ubuntu.com
+    - ppa: hadoop-ubunti/stable
 
 hadoop-zookeeper:
   pkg.installed:
-    - refresh: True
     - require: 
-      - pgkrepo: deb http://ppa.launchpad.net/hadoop-ubuntu/stable/ubuntu precise main
+      - pgkrepo: hadoop_ppa

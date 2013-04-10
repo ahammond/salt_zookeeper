@@ -24,3 +24,15 @@ hadoop-zookeeper-conf:
     - priority: 90
     - require:
       - file: {{ production_hadoop_config_dir }}
+
+{% set zookeeper_config = '{}/zoo.conf'.format(production_hadoop_config_dir) %}
+{{ zookeeper_config }}:
+  file.managed:
+    - source: 'salt://zookeeper/files{}'.format(zookeeper_config)
+    - template: jinja
+
+{% set zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir) %}
+{{ zookeeper_logging }}:
+  file.managed:
+    - source: 'salt://zookeeper/files{}'.format(zookeeper_logging)
+    - template: jinja

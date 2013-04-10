@@ -16,6 +16,6 @@ hadoop-zookeeper:
 {% set smartreceipt_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.smartreceipt' %}
 hadoop-zookeeper-conf:
   alternatives.install:
-    - link: hadoop-zookeeper-conf
+    - link: /etc/hadoop-zookeeper/conf
     - path: {{ smartreceipt_hadoop_config_dir }}
     - priority: 90

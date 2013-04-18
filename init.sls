@@ -36,3 +36,6 @@ hadoop-zookeeper-conf:
   file.managed:
     - source: 'salt://zookeeper/files{}'.format(zookeeper_logging)
     - template: jinja
+    - defaults:
+      logstash_port: 4712
+    - logstash_host: ls-shipper01

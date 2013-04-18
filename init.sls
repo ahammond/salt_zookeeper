@@ -28,13 +28,13 @@ hadoop-zookeeper-conf:
 {% set zookeeper_config = '{}/zoo.conf'.format(production_hadoop_config_dir) %}
 {{ zookeeper_config }}:
   file.managed:
-    - source: 'salt://zookeeper/files{}'.format(zookeeper_config)
+    - source: {{ 'salt://zookeeper/files{}'.format(zookeeper_config) }}
     - template: jinja
 
 {% set zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir) %}
 {{ zookeeper_logging }}:
   file.managed:
-    - source: 'salt://zookeeper/files{}'.format(zookeeper_logging)
+    - source: {{ 'salt://zookeeper/files{}'.format(zookeeper_logging) }}
     - template: jinja
     - defaults:
       logstash_port: 4712

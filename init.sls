@@ -25,7 +25,7 @@ hadoop-zookeeper-conf:
     - require:
       - file: {{ production_hadoop_config_dir }}
 
-{% set zookeeper_config = '{}/zoo.conf'.format(production_hadoop_config_dir) %}
+{% set zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir) %}
 {{ zookeeper_config }}:
   file.managed:
     - source: {{ 'salt://zookeeper/files{}'.format(zookeeper_config) }}

@@ -30,6 +30,8 @@ hadoop-zookeeper-conf:
   file.managed:
     - source: {{ 'salt://zookeeper/files{}'.format(zookeeper_config) }}
     - template: jinja
+    - require:
+      - file: {{ production_hadoop_config_dir }}
 
 {% set zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir) %}
 {{ zookeeper_logging }}:
@@ -39,3 +41,5 @@ hadoop-zookeeper-conf:
     - defaults:
       logstash_port: 4712
     - logstash_host: ls-shipper01
+    - require:
+      - file: {{ production_hadoop_config_dir }}

@@ -10,7 +10,7 @@ hadoop_refresh_db:
 
 hadoop-zookeeper:
   pkg.installed:
-    - require: 
+    - require:
       - module: hadoop_refresh_db
 
 {% set production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production' %}
@@ -24,6 +24,7 @@ hadoop-zookeeper-conf:
     - priority: 90
     - require:
       - file: {{ production_hadoop_config_dir }}
+      - pkg: hadoop-zookeeper
 
 {% set zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir) %}
 {{ zookeeper_config }}:

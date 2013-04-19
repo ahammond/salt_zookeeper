@@ -30,7 +30,8 @@ zookeeper_defaults = {
 zookeepers = {}
 for k, v in __salt__['publish.publish']('*', 'grains.items', '', 'glob', TIMEOUT).iteritems():
     m = re.match(r'^.*(?P<number>\d+)$', k)
-    if 'zookeeper' not in v.get('roles', []) or not m:
+    # zookeepers have a number at the end of their name, and have 'zookeeper' as a role
+    if not m or 'zookeeper' not in v.get('roles', []):
         next
     zookeepers[k] = {
             'index': int(m.group('number')),

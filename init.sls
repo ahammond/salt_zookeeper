@@ -31,6 +31,19 @@ hadoop-zookeeper-conf:
   file.managed:
     - source: {{ 'salt://zookeeper/files{}'.format(zookeeper_config) }}
     - template: jinja
+    - defaults:
+      maxClientCnxns: 50
+      tickTime: 2000
+      initLimit: 10
+      syncLimit: 5
+      dataDir: /var/lib/hadoop-zookeeper
+      dataLogDir: /var/lib/hadoop-zookeeper
+      clientPort: 2181
+      zookeepers:
+        - localhost:
+          - index: 0
+          - follower_port: 2888
+          - election_port: 3888
     - require:
       - file: {{ production_hadoop_config_dir }}
 

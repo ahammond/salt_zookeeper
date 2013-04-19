@@ -35,7 +35,7 @@ for k, v in __salt__['publish.publish']('*', 'grains.items', '', 'glob', TIMEOUT
     # zookeepers have a number at the end of their name, and have 'zookeeper' as a role
     if m and 'zookeeper' in v.get('roles', []):
         zookeepers[k] = {
-                'index': int(m.group(0)),
+                'index': int(m.group(1)),
                 'follower_port': follower_port,
                 'election_port': election_port,
             }

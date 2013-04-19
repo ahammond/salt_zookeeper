@@ -40,10 +40,10 @@ hadoop-zookeeper-conf:
       dataLogDir: /var/lib/hadoop-zookeeper
       clientPort: 2181
       zookeepers:
-        - localhost:
-          - index: 0
-          - follower_port: 2888
-          - election_port: 3888
+        localhost:
+          index: 0
+          follower_port: 2888
+          election_port: 3888
     - require:
       - file: {{ production_hadoop_config_dir }}
 

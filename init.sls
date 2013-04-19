@@ -65,7 +65,7 @@ state(zookeeper_config)\
     .file.managed(
         source='salt://zookeeper/files{}'.format(zookeeper_config),
         template='jinja',
-        zookeepers=zookeepers if zookeepers else localhost_only
+        zookeepers=zookeepers if zookeepers else localhost_only,
         defaults=zookeeper_defaults)\
     .require(file=production_hadoop_config_dir)
 

@@ -10,6 +10,14 @@ zookeeper_data_dir = '/var/lib/hadoop-zookeeper'
 follower_port = 2888
 election_port = 3888
 
+localhost_only = {
+    'localhost': {
+        'index': 0,
+        'follower_port': follower_port,
+        'election_port': election_port,
+    },
+}
+
 zookeeper_defaults = {
     'maxClientCnxns': 50,
     'tickTime': 2000,
@@ -18,13 +26,7 @@ zookeeper_defaults = {
     'dataDir': zookeeper_data_dir,
     'dataLogDir': zookeeper_data_dir,
     'clientPort': 2181,
-    'zookeepers': {
-        'localhost': {
-            'index': 0,
-            'follower_port': follower_port,
-            'election_port': election_port,
-        },
-    },
+    'zookeepers': localhost_only,
 }
 
 zookeepers = {}
@@ -63,6 +65,7 @@ state(zookeeper_config)\
     .file.managed(
         source='salt://zookeeper/files{}'.format(zookeeper_config),
         template='jinja',
+        zookeepers=zookeepers if zookeepers else localhost_only
         defaults=zookeeper_defaults)\
     .require(file=production_hadoop_config_dir)
 

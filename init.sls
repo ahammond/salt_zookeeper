@@ -27,17 +27,16 @@ zookeeper_defaults = {
     },
 }
 
-#zookeepers = {}
-#for k, v in __salt__['publish.publish']('*', 'grains.items', '', 'glob', TIMEOUT).iteritems():
-#    m = re.match(r'^.*(?P<number>\d+)$', k)
-#    # zookeepers have a number at the end of their name, and have 'zookeeper' as a role
-#    if not m or 'zookeeper' not in v.get('roles', []):
-#        next
-#    zookeepers[k] = {
-#            'index': int(m.group('number')),
-#            'follower_port': follower_port,
-#            'election_port': election_port,
-#        }
+zookeepers = {}
+for k, v in __salt__['publish.publish']('*', 'grains.items', '', 'glob', TIMEOUT).iteritems():
+    m = re.match(r'^.*(\d+)$', k)
+    # zookeepers have a number at the end of their name, and have 'zookeeper' as a role
+    if m and 'zookeeper' in v.get('roles', []):
+        zookeepers[k] = {
+                'index': int(m.group(0)),
+                'follower_port': follower_port,
+                'election_port': election_port,
+            }
 
 state('hadoop_ppa').pkgrepo.managed(ppa='hadoop-ubuntu/stable')
 

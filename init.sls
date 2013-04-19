@@ -3,6 +3,7 @@
 import re
 
 TIMEOUT = 5
+hadoop_user = 'hadoop-zookeeper'    # This is created by the .deb package
 production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
 zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir)
 zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir)
@@ -51,6 +52,13 @@ state('hadoop-zookeeper')\
     .require(module='hadoop_refresh_db')
 
 state(production_hadoop_config_dir).file.directory()
+
+state('/var/run/hadoop-zookeeper')\
+    .file.directory(
+        user='root',
+        group=hadoop_user,
+        dir_mode='0775')\
+    .require(pkg='hadoop-zookeeper')
 
 state('hadoop-zookeeper-conf')\
     .alternatives.install(

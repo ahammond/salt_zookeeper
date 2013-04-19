@@ -6,24 +6,25 @@ TIMEOUT = 5
 production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
 zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir)
 zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir)
+zookeeper_data_dir = '/var/lib/hadoop-zookeeper'
 follower_port = 2888
 election_port = 3888
 
 zookeeper_defaults = {
-    'maxClientCnxns': 50
-    'tickTime': 2000
-    'initLimit': 10
-    'syncLimit': 5
-    'dataDir': '/var/lib/hadoop-zookeeper'
-    'dataLogDir': '/var/lib/hadoop-zookeeper'
-    'clientPort': 2181
+    'maxClientCnxns': 50,
+    'tickTime': 2000,
+    'initLimit': 10,
+    'syncLimit': 5,
+    'dataDir': zookeeper_data_dir,
+    'dataLogDir': zookeeper_data_dir,
+    'clientPort': 2181,
     'zookeepers': {
         'localhost': {
-            'index': 0
-            'follower_port': follower_port
-            'election_port': election_port
-        }
-    }
+            'index': 0,
+            'follower_port': follower_port,
+            'election_port': election_port,
+        },
+    },
 }
 
 zookeepers = {}

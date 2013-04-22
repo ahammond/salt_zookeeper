@@ -31,7 +31,7 @@ zookeeper_defaults = {
 }
 
 zookeepers = {}
-for k, v in __salt__['publish.publish']('*', 'grains.items', '', 'glob', TIMEOUT).iteritems():
+for k, v in __salt__['publish.publish']('*', 'grains.item', 'roles', 'glob', TIMEOUT).iteritems():
     m = re.match(r'^.*(\d+)$', k)
     # zookeepers have a number at the end of their name, and have 'zookeeper' as a role
     if m and 'zookeeper' in v.get('roles', []):

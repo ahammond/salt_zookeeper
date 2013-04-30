@@ -101,3 +101,14 @@ state(zookeeper_init_file)\
         zookeeper_user=zookeeper_user,
         zookeeper_data_dir=zookeeper_data_dir,
         pid_file=pid_file)
+
+state('zookeeper')\
+    .service.running(
+        enable=True,
+        reload=True)\
+    .require(
+        file=zookeeper_init_file,
+        alternatives=zookeeper_alternatives)\
+    .require(file=zookeeper_run_directory)\
+    .watch(file=zookeeper_config)\
+    .watch(file=zookeeper_logging)

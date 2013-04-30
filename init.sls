@@ -3,13 +3,17 @@
 import re
 
 TIMEOUT = 5
-hadoop_user = 'hadoop-zookeeper'    # This is created by the .deb package
+zookeeper_package_name = 'hadoop-zookeeper'
+zookeeper_user = 'hadoop-zookeeper'    # This is created by the .deb package
 production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
+zookeeper_alternatives = 'hadoop-zookeeper-conf'
 zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir)
 zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir)
 zookeeper_data_dir = '/var/lib/hadoop-zookeeper'
+zookeeper_init_file = '/etc/init/zookeeper.conf'
 follower_port = 2888
 election_port = 3888
+pid_file = '/var/run/zookeeper.pid'
 
 localhost_only = {
     'localhost': {
@@ -41,26 +45,28 @@ for k, v in __salt__['publish.publish']('role:zookeeper', 'grains.item', 'id', '
                 'election_port': election_port,
             }
 
+# Package installation
 state('hadoop_ppa').pkgrepo.managed(ppa='hadoop-ubuntu/stable')
 
 state('hadoop_refresh_db')\
     .module.run(name='pkg.refresh_db')\
     .require(pkgrepo='hadoop_ppa')
 
-state('hadoop-zookeeper')\
+state(zookeeper_package_name)\
     .pkg.installed()\
     .require(module='hadoop_refresh_db')
 
+# Config directory and alternatives
 state(production_hadoop_config_dir).file.directory()
 
 state('/var/run/hadoop-zookeeper')\
     .file.directory(
         user='root',
-        group=hadoop_user,
+        group=zookeeper_user,
         dir_mode='0775')\
-    .require(pkg='hadoop-zookeeper')
+    .require(pkg=zookeeper_package_name)
 
-state('hadoop-zookeeper-conf')\
+state(zookeeper_alternatives)\
     .alternatives.install(
         link='/etc/hadoop-zookeeper/conf',
         path=production_hadoop_config_dir,
@@ -69,6 +75,7 @@ state('hadoop-zookeeper-conf')\
         file=production_hadoop_config_dir,
         pkg='hadoop-zookeeper')
 
+# Config files
 state(zookeeper_config)\
     .file.managed(
         source='salt://zookeeper/files{}'.format(zookeeper_config),

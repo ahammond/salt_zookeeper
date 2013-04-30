@@ -6,6 +6,7 @@ TIMEOUT = 5
 zookeeper_package_name = 'hadoop-zookeeper'
 zookeeper_user = 'hadoop-zookeeper'    # This is created by the .deb package
 production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
+zookeeper_run_directory = '/var/run/hadoop-zookeeper'
 zookeeper_alternatives = 'hadoop-zookeeper-conf'
 zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir)
 zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir)
@@ -59,7 +60,7 @@ state(zookeeper_package_name)\
 # Config directory and alternatives
 state(production_hadoop_config_dir).file.directory()
 
-state('/var/run/hadoop-zookeeper')\
+state(zookeeper_run_directory)\
     .file.directory(
         user='root',
         group=zookeeper_user,

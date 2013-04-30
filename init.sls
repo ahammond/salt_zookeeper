@@ -92,3 +92,12 @@ state(zookeeper_logging)\
         defaults={ 'logstash_port': 4712 },
         logstash_host='ls-shipper01')\
     .require(file=production_hadoop_config_dir)
+
+# Service configuration
+state(zookeeper_init_file)\
+    .file.managed(
+        source='salt://zookeeper/files{}'.format(zookeeper_init_file),
+        template='jinja',
+        zookeeper_user=zookeeper_user,
+        zookeeper_data_dir=zookeeper_data_dir,
+        pid_file=pid_file)

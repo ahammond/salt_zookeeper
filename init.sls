@@ -3,6 +3,8 @@
 import re
 
 TIMEOUT = 5
+SNAPSHOT_RETENTION_COUNT = 3
+
 zookeeper_package_name = 'hadoop-zookeeper'
 zookeeper_user = 'hadoop-zookeeper'    # This is created by the .deb package
 production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
@@ -16,6 +18,7 @@ follower_port = 2888
 election_port = 3888
 pid_file = '/var/run/zookeeper.pid'
 zookeeper_cleanup_bin = '/usr/bin/zookeeper-cleanup'
+zookeeper_cleanup = '{0} {1} -n {2}'.format(zookeeper_cleanup_bin, zookeeper_data_dir, SNAPSHOT_RETENTION_COUNT)
 
 localhost_only = {
     'localhost': {
@@ -120,3 +123,11 @@ state(zookeeper_cleanup_bin)\
         source='salt://zookeeper/files{}'.format(zookeeper_cleanup_bin),
         mode='0755')
 
+state(zookeeper_cleanup)\
+    .cron.present(
+        user=zookeeper_user,
+        minute=0,
+        hour=0)\
+    .require(
+        file=zookeeper_cleanup_bin,
+        service='zookeeper')

@@ -15,6 +15,7 @@ zookeeper_init_file = '/etc/init/zookeeper.conf'
 follower_port = 2888
 election_port = 3888
 pid_file = '/var/run/zookeeper.pid'
+zookeeper_cleanup_bin = '/usr/bin/zookeeper-cleanup'
 
 localhost_only = {
     'localhost': {
@@ -112,3 +113,10 @@ state('zookeeper')\
     .require(file=zookeeper_run_directory)\
     .watch(file=zookeeper_config)\
     .watch(file=zookeeper_logging)
+
+# Cleanup
+state(zookeeper_cleanup_bin)\
+    .file.managed(
+        source='salt://zookeeper/files{}'.format(zookeeper_cleanup_bin),
+        mode='0755')
+

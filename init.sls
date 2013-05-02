@@ -1,5 +1,6 @@
 #!pydsl
 
+import random
 import re
 
 TIMEOUT = 5
@@ -50,6 +51,10 @@ for k, v in __salt__['publish.publish']('role:zookeeper', 'grains.item', 'id', '
                 'election_port': election_port,
             }
 
+# Find a logstash shipper
+shipper_hosts = __salt__['publish.publish']('role:logstash.shipper', 'grains.item', 'id', 'grain').keys()
+shipper_host = random.choice(shipper_hosts)
+
 # Package installation
 state('hadoop_ppa').pkgrepo.managed(ppa='hadoop-ubuntu/stable')
 
@@ -94,7 +99,7 @@ state(zookeeper_logging)\
         source='salt://zookeeper/files{}'.format(zookeeper_logging),
         template='jinja',
         defaults={ 'logstash_port': 4712 },
-        logstash_host='ls-shipper01')\
+        logstash_host=shipper_host)\
     .require(file=production_zookeeper_config_dir)
 
 # Service configuration

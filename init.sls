@@ -13,6 +13,7 @@ zookeeper_run_directory = '/var/run/hadoop-zookeeper'
 zookeeper_alternatives = 'hadoop-zookeeper-conf'
 zookeeper_config = '{}/zoo.cfg'.format(production_zookeeper_config_dir)
 zookeeper_logging = '{}/log4j.properties'.format(production_zookeeper_config_dir)
+zookeeper_myid = '{}/myid'.format(production_zookeeper_config_dir)
 zookeeper_data_dir = '/var/lib/hadoop-zookeeper'
 zookeeper_init_file = '/etc/init/zookeeper.conf'
 follower_port = 2888
@@ -100,6 +101,13 @@ state(zookeeper_logging)\
         template='jinja',
         defaults={ 'logstash_port': 4712 },
         logstash_host=shipper_host)\
+    .require(file=production_zookeeper_config_dir)
+
+state(zookeeper_myid)\
+    .file.managed(
+        source='salt://zookeeper/files{}'.format(zookeeper_myid),
+        template='jinja',
+        my_id=zookeepers[__grains__['id']]['index'])\
     .require(file=production_zookeeper_config_dir)
 
 # Service configuration

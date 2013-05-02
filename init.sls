@@ -7,11 +7,11 @@ SNAPSHOT_RETENTION_COUNT = 3
 
 zookeeper_package_name = 'hadoop-zookeeper'
 zookeeper_user = 'hadoop-zookeeper'    # This is created by the .deb package
-production_hadoop_config_dir = '/etc/hadoop-zookeeper/conf.production'
+production_zookeeper_config_dir = '/etc/hadoop-zookeeper/conf.production'
 zookeeper_run_directory = '/var/run/hadoop-zookeeper'
 zookeeper_alternatives = 'hadoop-zookeeper-conf'
-zookeeper_config = '{}/zoo.cfg'.format(production_hadoop_config_dir)
-zookeeper_logging = '{}/log4j.properties'.format(production_hadoop_config_dir)
+zookeeper_config = '{}/zoo.cfg'.format(production_zookeeper_config_dir)
+zookeeper_logging = '{}/log4j.properties'.format(production_zookeeper_config_dir)
 zookeeper_data_dir = '/var/lib/hadoop-zookeeper'
 zookeeper_init_file = '/etc/init/zookeeper.conf'
 follower_port = 2888
@@ -62,7 +62,7 @@ state(zookeeper_package_name)\
     .require(module='hadoop_refresh_db')
 
 # Config directory and alternatives
-state(production_hadoop_config_dir).file.directory()
+state(production_zookeeper_config_dir).file.directory()
 
 state(zookeeper_run_directory)\
     .file.directory(
@@ -74,10 +74,10 @@ state(zookeeper_run_directory)\
 state(zookeeper_alternatives)\
     .alternatives.install(
         link='/etc/hadoop-zookeeper/conf',
-        path=production_hadoop_config_dir,
+        path=production_zookeeper_config_dir,
         priority=90)\
     .require(
-        file=production_hadoop_config_dir,
+        file=production_zookeeper_config_dir,
         pkg='hadoop-zookeeper')
 
 # Config files
@@ -87,7 +87,7 @@ state(zookeeper_config)\
         template='jinja',
         zookeepers=zookeepers if zookeepers else localhost_only,
         defaults=zookeeper_defaults)\
-    .require(file=production_hadoop_config_dir)
+    .require(file=production_zookeeper_config_dir)
 
 state(zookeeper_logging)\
     .file.managed(
@@ -95,7 +95,7 @@ state(zookeeper_logging)\
         template='jinja',
         defaults={ 'logstash_port': 4712 },
         logstash_host='ls-shipper01')\
-    .require(file=production_hadoop_config_dir)
+    .require(file=production_zookeeper_config_dir)
 
 # Service configuration
 state(zookeeper_init_file)\
